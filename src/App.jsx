@@ -1,12 +1,13 @@
 import { useState } from 'react'
 import './App.css'
 import Bar from './Components/Search_Bar.jsx'
+import Card_Component from './Components/Card_Component.jsx'
 
 
 function App() {
   return (
     <>
-      <Bar></Bar>
+      <Card_Component></Card_Component>
     </>
   )
 }
