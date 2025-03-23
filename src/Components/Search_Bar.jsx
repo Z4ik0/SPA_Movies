@@ -21,10 +21,11 @@ function Bar() {
   if (!search) {
     pelis = data;
   } else {
-    pelis = data.filter((dato) =>
-      dato.name.toLowerCase().includes(search.toLocaleLowerCase())
+    pelis  = data.filter( (dato) =>
+      dato.original_title.toLowerCase().includes(search.toLowerCase())
     );
   }
+
 
   return (
     <>
@@ -43,7 +44,7 @@ function Bar() {
           />
         </div>
       </div>
-      <Card_Component data={data} isPending={isPending}></Card_Component>
+      <Card_Component data={pelis} isPending={isPending}></Card_Component>
     </>
   );
 }

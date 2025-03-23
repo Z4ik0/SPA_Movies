@@ -10,16 +10,17 @@ export const useFetch = (url, token) => {
     const fetchData = async () => {
       setIsPending(true);
       try {
+
         const response = await axios.get(url, {
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
         });
-        
+        // console.log(response.data)
         setTimeout(() => {
           setIsPending(false);
-          setData(response.data);
+          setData(response.data.results);
           setError(null);
         }, 1000);
       } catch (error) {

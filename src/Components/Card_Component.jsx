@@ -16,7 +16,7 @@ function Card_Component({ data, isPending }) {
         <div className='container'>
             <div className='row gap-4  justify-content-md-center'>
                 {isPending ? <Loading></Loading> : ''}
-                {data != null ? data.results.map((movie) => {
+                {data != null ? data.map((movie) => {
                     return (
                         <div className="card col-3"  key={movie.id} style={{ overflow: 'hidden' }}>
                             <div>
