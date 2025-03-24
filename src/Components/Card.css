@@ -1,10 +1,25 @@
 .card{
-    border: 2px solid black;
+    border: 2px solid rgb(175, 175, 175);
     border-radius: 20px;
+    padding: 12px;
+    max-height: 500px;
+   
 }
+
 
 .card-body{
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    
+}
+.card-title{
+    height: 80px;
+    
+    
+}
+.scroll{
+    max-height: 200px;
+    min-height: 150px;
+    overflow-y: auto;
+  
 }
