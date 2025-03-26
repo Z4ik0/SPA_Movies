@@ -4,10 +4,10 @@ import { useGenres } from "./hooks/fetchGenres";
 import Loading from "./Loading";
 import Card_Component from "./Card_Component";
 
-
 function Bar() {
   const [search, setSearch] = useState("");
   const [selectedGenre, setSelectedGenre] = useState(null);
+  const [searchType, setSearchType] = useState("movie");
 
   const API_URL = import.meta.env.VITE_API_URL;
   const API_ACCESS_TOKEN = import.meta.env.VITE_API_ACCESS_TOKEN;
@@ -18,7 +18,8 @@ function Bar() {
     API_ACCESS_TOKEN,
     search,
     selectedGenre,
-    genres
+    genres,
+    searchType
   );
 
   return (
@@ -58,6 +59,17 @@ function Bar() {
             ))}
           </select>
         </div>
+
+        <div className="container mt-3">
+          <label className="form-label text">Buscar por:</label>
+          <select
+            className="form-select"
+            onChange={(e) => setSearchType(e.target.value)}
+          >
+            <option value="movie">Título de película</option>
+            <option value="person">Nombre de actor</option>
+          </select>
+        </div>
       </div>
 
       {isPending ? (
@@ -75,15 +87,21 @@ function Bar() {
         <Card_Component data={data} />
       ) : data && data.length > 0 ? (
         <div>
-          <h2>Películas con el nombre "{search}"</h2>
+          <h2>
+            {searchType === "movie"
+              ? `Películas con el nombre "${search}"`
+              : `Actores con el nombre "${search}"`}
+          </h2>
           <Card_Component data={data} />
         </div>
       ) : (
-        <p>No hay resultados relacionados para "{search}".</p>
+        <p>
+          No hay resultados relacionados para "{search}" en{" "}
+          {searchType === "movie" ? "películas" : "actores"}.
+        </p>
       )}
     </>
   );
 }
-
 
 export default Bar;

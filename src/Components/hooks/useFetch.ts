@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-export const useFetch = (url, token, searchKey, genreId, genres) => {
+export const useFetch = (url, token, searchKey, genreId, genres, searchType = "movie") => {
   const [data, setData] = useState(null);
   const [genreData, setGenreData] = useState(null);
   const [genreName, setGenreName] = useState("");
@@ -25,8 +25,24 @@ export const useFetch = (url, token, searchKey, genreId, genres) => {
           const genreObj = genres?.find((g) => g.id === parseInt(genreId));
           setGenreName(genreObj?.name || "");
         } else if (searchKey.trim() !== "") {
-          endpoint = `${url}/search/movie`;
-          params.query = searchKey;
+          if (searchType === "person") {
+            const actorResponse = await axios.get(`${url}/search/person`, {
+              headers: { Authorization: `Bearer ${token}` },
+              params: { query: searchKey, language: "es-MX" },
+            });
+
+            if (actorResponse.data.results.length > 0) {
+              const actorId = actorResponse.data.results[0].id;
+              endpoint = `${url}/discover/movie`;
+              params.with_cast = actorId;
+            } else {
+              setIsPending(false);
+              return;
+            }
+          } else {
+            endpoint = `${url}/search/movie`;
+            params.query = searchKey;
+          }
         }
 
         const response = await axios.get(endpoint, {
@@ -34,7 +50,11 @@ export const useFetch = (url, token, searchKey, genreId, genres) => {
           params,
         });
 
-        genreId ? setGenreData(response.data.results) : setData(response.data.results);
+        if (genreId) {
+          setGenreData(response.data.results);
+        } else {
+          setData(response.data.results);
+        }
 
         setIsPending(false);
       } catch (error) {
@@ -44,7 +64,7 @@ export const useFetch = (url, token, searchKey, genreId, genres) => {
     };
 
     fetchData();
-  }, [url, token, searchKey, genreId, genres]);
+  }, [url, token, searchKey, genreId, genres, searchType]);
 
   return { data, genreData, genreName, isPending };
 };
