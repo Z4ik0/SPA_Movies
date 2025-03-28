@@ -1,36 +1,70 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-export const useFetch = (url, token) => {
+export const useFetch = (url, token, searchKey, genreId, genres, searchType = "movie") => {
   const [data, setData] = useState(null);
+  const [genreData, setGenreData] = useState(null);
+  const [genreName, setGenreName] = useState("");
   const [isPending, setIsPending] = useState(false);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
       setIsPending(true);
-      try {
+      setData(null);
+      setGenreData(null);
+      setGenreName("");
 
-        const response = await axios.get(url, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
+      try {
+        let endpoint = `${url}/movie/popular`;
+        const params = { language: "es-MX" };
+
+        if (genreId) {
+          endpoint = `${url}/discover/movie`;
+          params.with_genres = genreId;
+
+          const genreObj = genres?.find((g) => g.id === parseInt(genreId));
+          setGenreName(genreObj?.name || "");
+        } else if (searchKey.trim() !== "") {
+          if (searchType === "person") {
+            const actorResponse = await axios.get(`${url}/search/person`, {
+              headers: { Authorization: `Bearer ${token}` },
+              params: { query: searchKey, language: "es-MX" },
+            });
+
+            if (actorResponse.data.results.length > 0) {
+              const actorId = actorResponse.data.results[0].id;
+              endpoint = `${url}/discover/movie`;
+              params.with_cast = actorId;
+            } else {
+              setIsPending(false);
+              return;
+            }
+          } else {
+            endpoint = `${url}/search/movie`;
+            params.query = searchKey;
+          }
+        }
+
+        const response = await axios.get(endpoint, {
+          headers: { Authorization: `Bearer ${token}` },
+          params,
         });
-        // console.log(response.data)
-        setTimeout(() => {
-          setIsPending(false);
+
+        if (genreId) {
+          setGenreData(response.data.results);
+        } else {
           setData(response.data.results);
-          setError(null);
-        }, 1000);
+        }
+
+        setIsPending(false);
       } catch (error) {
-        setError(error);
+        console.error("Error en la petición:", error);
         setIsPending(false);
       }
     };
 
     fetchData();
-  }, [url, token]);
+  }, [url, token, searchKey, genreId, genres, searchType]);
 
-  return { data, isPending, error };
+  return { data, genreData, genreName, isPending };
 };
