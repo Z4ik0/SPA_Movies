@@ -60,7 +60,7 @@ function Bar() {
           </select>
         </div>
 
-        <div className="container mt-3">
+        <div className="container mt-3 mb-5">
           <label className="form-label text">Buscar por:</label>
           <select
             className="form-select"
