@@ -24,9 +24,9 @@ function Bar() {
 
   return (
     <>
-      <div className="form">
+      <div className="form" style={{ background: "linear-gradient(to bottom, black, red)" }}>
         <div className="container">
-          <label className="form-label text" htmlFor="Searchbar">
+          <label className="form-label text-white" htmlFor="Searchbar">
             Encuentra tu película
           </label>
           <input
@@ -39,16 +39,28 @@ function Bar() {
             className="form-control input"
             placeholder="Buscar.."
             type="text"
+            style={{
+              border: "2px solid red",  
+              borderRadius: "10px",     
+              backgroundColor: "black", 
+              color: "white",          
+            }}
           />
         </div>
 
         <div className="container mt-3">
-          <label className="form-label text">Filtrar por género:</label>
+          <label className="form-label text-white">Filtrar por género:</label>
           <select
             className="form-select"
             onChange={(e) => {
               setSelectedGenre(e.target.value);
               setSearch("");
+            }}
+            style={{
+              border: "2px solid red",  
+              borderRadius: "10px",     
+              backgroundColor: "black", 
+              color: "white",           
             }}
           >
             <option value="">Selecciona un género</option>
@@ -60,11 +72,17 @@ function Bar() {
           </select>
         </div>
 
-        <div className="container mt-3 mb-5">
-          <label className="form-label text">Buscar por:</label>
+        <div className="container mt-3">
+          <label className="form-label text-white">Buscar por:</label>
           <select
             className="form-select"
             onChange={(e) => setSearchType(e.target.value)}
+            style={{
+              border: "2px solid red",  
+              borderRadius: "10px",     
+              backgroundColor: "black", 
+              color: "white",          
+            }}
           >
             <option value="movie">Título de película</option>
             <option value="person">Nombre de actor</option>
@@ -77,17 +95,17 @@ function Bar() {
       ) : selectedGenre ? (
         genreData && genreData.length > 0 ? (
           <div>
-            <h2>Películas del género "{genreName}"</h2>
+            <h2 className="text-white">Películas del género "{genreName}"</h2>
             <Card_Component data={genreData} />
           </div>
         ) : (
-          <p>No se encontraron películas para el género seleccionado.</p>
+          <p className="text-white">No se encontraron películas para el género seleccionado.</p>
         )
       ) : search === "" ? (
         <Card_Component data={data} />
       ) : data && data.length > 0 ? (
         <div>
-          <h2>
+          <h2 className="text-white">
             {searchType === "movie"
               ? `Películas con el nombre "${search}"`
               : `Actores con el nombre "${search}"`}
@@ -95,7 +113,7 @@ function Bar() {
           <Card_Component data={data} />
         </div>
       ) : (
-        <p>
+        <p className="text-white">
           No hay resultados relacionados para "{search}" en{" "}
           {searchType === "movie" ? "películas" : "actores"}.
         </p>
